@@ -122,7 +122,7 @@ public class Othello
                    InstantiationException, IllegalAccessException,
                    InvocationTargetException {    	
     	IOthelloAI retGL = null;
-    	if(!cmdParam.equalsIgnoreCase(HUMAN_CMD)) 
+        if(!cmdParam.equalsIgnoreCase(HUMAN_CMD))
             retGL = (IOthelloAI)Class.forName(cmdParam).getConstructor().newInstance();
     	return retGL;
     }

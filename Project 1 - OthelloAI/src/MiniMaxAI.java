@@ -24,9 +24,8 @@ class MiniMaxAI implements IOthelloAI {
      * */
 
     private Position initMiniMax(GameState s) {
-
-        Position chosenPosition = new Position(-1, -1);
         ArrayList<Position> moves = s.legalMoves();
+        Position chosenPosition = moves.get(0);
 
 
         // If player 1
