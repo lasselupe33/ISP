@@ -38,7 +38,7 @@ class MiniMaxAI implements IOthelloAI {
                 childState.insertToken(move);
 
                 // Searches recursively for the best possible outcome from current move.
-                int currentValue = minimax(childState);
+                int currentValue = minimax(childState, 0);
 
                 // If currentValue is larger that highestValue, then this position has
                 // a better outcome.
@@ -63,7 +63,7 @@ class MiniMaxAI implements IOthelloAI {
                 childState.insertToken(move);
 
                 // Searches recursively for the best possible outcome from current move
-                int currentValue = minimax(childState);
+                int currentValue = minimax(childState, 0);
 
                 // If currentValue is lower that lowestValue, then this position has
                 // a better outcome.
@@ -84,8 +84,7 @@ class MiniMaxAI implements IOthelloAI {
      *  each state.
      * */
 
-    private int minimax(GameState s) {
-
+    private int minimax(GameState s, int depth) {
         // If in terminal state, return value.
         if(s.isFinished()) {
             int[] tokens = s.countTokens();
@@ -98,15 +97,23 @@ class MiniMaxAI implements IOthelloAI {
 
         ArrayList<Position> moves = s.legalMoves();
 
+        if (moves.size() == 0) {
+            s.changePlayer();
+
+            return minimax(s, depth + 1);
+        }
+
         // If player 1
         if (s.getPlayerInTurn() == 1) {
             int value = Integer.MIN_VALUE;
 
-
             for (Position move : moves) {
-                s.insertToken(move);
-                value = Math.max(value, minimax(s));
+                GameState clonedState = new GameState(s.getBoard(), s.getPlayerInTurn());
+                clonedState.insertToken(move);
+
+                value = Math.max(value, minimax(clonedState, depth + 1));
             }
+
             return value;
         }
 
@@ -114,8 +121,10 @@ class MiniMaxAI implements IOthelloAI {
         else {
             int value = Integer.MAX_VALUE;
             for (Position move : moves) {
-                s.insertToken(move);
-                value = Math.min(value, minimax(s));
+                GameState clonedState = new GameState(s.getBoard(), s.getPlayerInTurn());
+                clonedState.insertToken(move);
+
+                value = Math.min(value, minimax(clonedState, depth + 1));
             }
 
             return value;

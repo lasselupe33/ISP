@@ -74,6 +74,17 @@ class AlphaBetaAI implements IOthelloAI {
         }
     }
 
+    private int getHeuristic(GameState s) {
+        // 1. Value corners highly
+
+        // 2. Value mobility high
+
+        // 3. ???
+
+        // 4. profit
+        return 1;
+    }
+
     /**
      * Algorithm that'll recursively traverse down the game tree in order to
      * determine either the lowest possible beta or the highest possible alpha
@@ -92,14 +103,21 @@ class AlphaBetaAI implements IOthelloAI {
 
         ArrayList<Position> moves = s.legalMoves();
 
+        if (moves.size() == 0) {
+            s.changePlayer();
+
+            return alphabeta(s, alpha, beta);
+        }
+
         // Player MAX
         if (s.getPlayerInTurn() == 1) {
             // Go through all available moves in the current game state
             for (Position move : moves) {
-                s.insertToken(move);
+                GameState clonedState = new GameState(s.getBoard(), s.getPlayerInTurn());
+                clonedState.insertToken(move);
 
                 // Searches recursively for the highest possible alpha from current move.
-                alpha = Math.max(alpha, alphabeta(s, alpha, beta));
+                alpha = Math.max(alpha, alphabeta(clonedState, alpha, beta));
 
                 // beta cut-off
                 if (beta <= alpha) {
@@ -112,10 +130,11 @@ class AlphaBetaAI implements IOthelloAI {
             // Player MIN
             // Go through all available moves in the current game state
             for (Position move : moves) {
-                s.insertToken(move);
+                GameState clonedState = new GameState(s.getBoard(), s.getPlayerInTurn());
+                clonedState.insertToken(move);
 
                 // Searches recursively for the lowest possible beta from current move.
-                beta = Math.min(beta, alphabeta(s, alpha, beta));
+                beta = Math.min(beta, alphabeta(clonedState, alpha, beta));
 
                 // alpha cut-off
                 if (beta <= alpha) {
