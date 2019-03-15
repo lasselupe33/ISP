@@ -38,7 +38,7 @@ class MiniMaxAI implements IOthelloAI {
                 childState.insertToken(move);
 
                 // Searches recursively for the best possible outcome from current move.
-                int currentValue = minimax(childState, 0);
+                int currentValue = minimax(childState);
 
                 // If currentValue is larger that highestValue, then this position has
                 // a better outcome.
@@ -63,7 +63,7 @@ class MiniMaxAI implements IOthelloAI {
                 childState.insertToken(move);
 
                 // Searches recursively for the best possible outcome from current move
-                int currentValue = minimax(childState, 0);
+                int currentValue = minimax(childState);
 
                 // If currentValue is lower that lowestValue, then this position has
                 // a better outcome.
@@ -84,7 +84,7 @@ class MiniMaxAI implements IOthelloAI {
      *  each state.
      * */
 
-    private int minimax(GameState s, int depth) {
+    private int minimax(GameState s) {
         // If in terminal state, return value.
         if(s.isFinished()) {
             int[] tokens = s.countTokens();
@@ -100,7 +100,7 @@ class MiniMaxAI implements IOthelloAI {
         if (moves.size() == 0) {
             s.changePlayer();
 
-            return minimax(s, depth + 1);
+            return minimax(s);
         }
 
         // If player 1
@@ -111,7 +111,7 @@ class MiniMaxAI implements IOthelloAI {
                 GameState clonedState = new GameState(s.getBoard(), s.getPlayerInTurn());
                 clonedState.insertToken(move);
 
-                value = Math.max(value, minimax(clonedState, depth + 1));
+                value = Math.max(value, minimax(clonedState));
             }
 
             return value;
@@ -124,7 +124,7 @@ class MiniMaxAI implements IOthelloAI {
                 GameState clonedState = new GameState(s.getBoard(), s.getPlayerInTurn());
                 clonedState.insertToken(move);
 
-                value = Math.min(value, minimax(clonedState, depth + 1));
+                value = Math.min(value, minimax(clonedState));
             }
 
             return value;
