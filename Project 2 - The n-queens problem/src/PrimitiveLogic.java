@@ -21,11 +21,6 @@ public class PrimitiveLogic implements IQueensLogic{
     }
 
     public void insertQueen(int column, int row) {
-
-        // Should this check be here?  -Christina
-        /*if(board[column][row] == 1) {
-            return;
-        }*/
         board[column][row] = 1;
     }
 }
