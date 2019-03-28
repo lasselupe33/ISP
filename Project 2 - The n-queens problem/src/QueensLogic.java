@@ -47,8 +47,6 @@ public class QueensLogic implements IQueensLogic {
 
     }
 
-
-
     private void InitializeBDD() {
 		int nVars = size*size; 
 
@@ -71,13 +69,14 @@ public class QueensLogic implements IQueensLogic {
         BDD n = True;
         BDD subBDD = False;
 
-        for (int c = 0; c < row; c++) {
+        // All columns on rows position should 
+        for (int c = 0; c < size; c++) {
             if(column != c) {
                 n = n.and(getNotVariable(c, row));
             }
         }
 
-        for (int r = 0; r < column; r++) {
+        for (int r = 0; r < size; r++) {
             if(row != r) {
                 n = n.and(getNotVariable(column, r));
             }
