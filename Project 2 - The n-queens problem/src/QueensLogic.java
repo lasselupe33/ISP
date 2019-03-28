@@ -104,6 +104,7 @@ public class QueensLogic implements IQueensLogic {
 
         int c2 = column; int r2 = row;
 
+
         // Diagonal bottom left --> top right
         while (r2 >= 0 && c2 < size) {
 
@@ -112,6 +113,7 @@ public class QueensLogic implements IQueensLogic {
             }
 
             c2++; r2--;
+
         }
 
         subBDD = subBDD.or(getNotVariable(column, row));
@@ -155,6 +157,7 @@ public class QueensLogic implements IQueensLogic {
         for (int column = 0; column < board.length; column++) {
             for (int row = 0; row < board[column].length; row++) {
                 if (isPositionInvalid(column, row)) {
+
                     board[column][row] = -1;
                     invalidCellsCounter++;
                 }
