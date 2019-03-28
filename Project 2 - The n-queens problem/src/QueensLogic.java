@@ -38,17 +38,10 @@ public class QueensLogic implements IQueensLogic {
         bdd = bdd.restrict(getVariable(column, row));
 
         updateInvalidPositions();
-
-        /*for (int c = 0; c < board.length; c++) {
-            for (int r = 0; r < board[c].length; r++) {
-                System.out.println(c + ", " + r + ": " + board[c][r]);
-            }
-        }*/
-
     }
 
     private void InitializeBDD() {
-		int nVars = size*size; 
+        int nVars = size*size;
 
         fact = JFactory.init(2000000,200000);
         True = fact.one();
@@ -57,11 +50,21 @@ public class QueensLogic implements IQueensLogic {
 
         fact.setVarNum(nVars);
 
-
         for (int column = 0; column < board.length; column++) {
             for (int row = 0; row < board[column].length; row++) {
                 createRuleForPosition(column, row);
             }
+        }
+
+        for (int row = 0; row < size; row++) {
+            BDD sub_bdd = False;
+
+            for (int column = 0; column < size; column++) {
+                sub_bdd = sub_bdd.or(getVariable(column, row));
+            }
+
+            //sub_bdd must be true
+            bdd = bdd.and(sub_bdd);
         }
     }
 
@@ -69,17 +72,49 @@ public class QueensLogic implements IQueensLogic {
         BDD n = True;
         BDD subBDD = False;
 
-        // All columns on rows position should 
+        // All column cells on rows position should be added
         for (int c = 0; c < size; c++) {
             if(column != c) {
+                // It should be 'and', since if one queen is placed, the
+                // whole row should return true (true that it is invalid)
                 n = n.and(getNotVariable(c, row));
             }
         }
 
+        // All row cells on columns position should be added
         for (int r = 0; r < size; r++) {
             if(row != r) {
                 n = n.and(getNotVariable(column, r));
             }
+        }
+
+
+        int c = column;
+        int r = row;
+
+        // Diagonal top left --> bottom right
+        while (r < size && c < size) {
+
+            if(c != column && r != row) {
+                n = n.and(getNotVariable(c, r));
+            }
+
+            c++;
+            r++;
+        }
+
+        int c2 = column;
+        int r2 = row;
+
+        // Diagonal bottom left --> top right
+        while (r2 >= 0 && c2 < size) {
+
+            if(c2 != column && r2 != row) {
+                n = n.and(getNotVariable(c2, r2));
+            }
+
+            c2++;
+            r2--;
         }
 
         subBDD = subBDD.or(getNotVariable(column, row));
@@ -114,9 +149,11 @@ public class QueensLogic implements IQueensLogic {
         for (int column = 0; column < board.length; column++) {
             for (int row = 0; row < board[column].length; row++) {
                 if (isPositionInvalid(column, row)) {
+
                     board[column][row] = -1;
                 }
             }
         }
     }
 }
+
